@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8">
+    <title>Weather Station</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+</head>
+<body>
+
+<div class="topbar">
+  🌤️ To visit the French version of this page, click <a href="index.html">here</a>. For an about page, click <a href="info.html">here</a>.
+</div>
+
+<!-- In this project, we use some dumb random text data at the start that'll be then remplaced by the user's city. In this example, I took Shibuya, because Jujutsu Kaisen is a cool anime? and I thought I'd reference it. !-->
+
+<div class="card">
+    <h1>Epitech Internship - The Weather Station! (now in english)</h1>
+    <br>
+    <div class="search">
+    <input type="text" placeholder="City, airport, you name it..." spellcheck="false">
+    <button><img src="images/search.png"></button>
+    <div class="error">
+        <p>An error occurred. (ERR_LOCATION_UNKNOWN)</p>
+    </div>
+    <div class="weather">
+        <img class="weather_icons" src="images/drizzle.png">
+        <h1 class="temp">29°C</h1>
+        <h2 class="city">Shibuya</h2>
+        <div class="details">
+            <div class="col">
+            <img class="weather_icons" src="images/humidity.png">
+                <div>
+                    <p>Humidity</p>
+                    <p class="humidity">45%</p>
+                </div>
+            </div>
+            <div class="col">
+                <img class="weather_icons" src="images/wind.png">
+                <div>
+                    <p>Wind</p>
+                    <p class="wind">15km/h</p>
+                </div>
+            </div>
+        </div>
+            <div class="colv2">
+                <img class="weather_icons" src="images/sealevel.png">
+                <div>
+                    <p>Sea level</p>
+                    <p class="sea_level">1000 meters</p>
+                </div>
+            </div>
+    </div>
+</div>
+</div>
+
+<script>
+ const apiKey = "c3896fb28b680a6fd818b33b54bb5dc2";
+const apiURL = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+
+const searchBox = document.querySelector(".search input");
+const searchButton = document.querySelector(".search button");
+const errorDiv = document.querySelector(".error");
+const weatherIcon = document.querySelector(".weather > img"); // l'icône météo principale
+
+async function check_weather(city) {
+    try {
+        const response = await fetch(apiURL + city + `&appid=${apiKey}`);
+
+        if (response.status === 404) {
+            errorDiv.style.display = "block";
+            return;
+        }
+
+        const data = await response.json();
+        console.log(data);
+
+        document.querySelector(".city").textContent = data.name;
+        document.querySelector(".sea_level").textContent = data.main.sea_level + " mètres";
+        document.querySelector(".temp").textContent = Math.round(data.main.temp) + "°C";
+        document.querySelector(".humidity").textContent = data.main.humidity + "%";
+        document.querySelector(".wind").textContent = Math.round(data.wind.speed * 3.6) + "km/h";
+        errorDiv.style.display = "none";
+
+        errorDiv.style.display = "none";
+        document.querySelectorAll(".weather_icons").forEach(icon => {
+            icon.style.display = "block";
+        });
+        document.querySelector(".weather h1").style.display = "block";
+        document.querySelector(".weather h2").style.display = "block";
+        document.querySelector(".humidity").style.display = "block";
+        document.querySelector(".wind").style.display = "block";
+        document.querySelector(".weather").style.display = "block";
+
+        const weatherMain = data.weather[0].main;
+        switch (weatherMain) {
+            case "Clouds":
+                weatherIcon.src = "images/clouds.png";
+                break;
+            case "Clear":
+                weatherIcon.src = "images/clear.png";
+                break;
+            case "Drizzle":
+                weatherIcon.src = "images/drizzle.png";
+                break;
+            case "Mist":
+                weatherIcon.src = "images/mist.png";
+                break;
+            case "Rain":
+                weatherIcon.src = "images/rain.png";
+                break;
+            case "Snow":
+                weatherIcon.src = "images/snow.png";
+                break;
+            default:
+                weatherIcon.src = "images/clear.png"; // valeur par défaut
+        }
+
+    } catch (error) {
+        console.error("Erreur réseau ou fetch :", error);
+        errorDiv.style.display = "block";
+    }
+}
+
+searchButton.addEventListener("click", () => {
+    const city = searchBox.value.trim();
+    if (city !== "") {
+        check_weather(city);
+    }
+});
+</script>
+
+<div class="infobox">
+    💖 Weather data provided by <a href="https://openweathermap.org/" target="_blank">OpenWeatherMap</a>, Wallpaper provided by <a href="https://wallpaperaccess.com/anime-summer-scenery" target="_blank">Wallpaper Access</a>.
+</div>
+
+
+</body>
+</html>

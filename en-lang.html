@@ -76,7 +76,7 @@ async function check_weather(city) {
         console.log(data);
 
         document.querySelector(".city").textContent = data.name;
-        document.querySelector(".sea_level").textContent = data.main.sea_level + " mètres";
+        document.querySelector(".sea_level").textContent = data.main.sea_level + " metres";
         document.querySelector(".temp").textContent = Math.round(data.main.temp) + "°C";
         document.querySelector(".humidity").textContent = data.main.humidity + "%";
         document.querySelector(".wind").textContent = Math.round(data.wind.speed * 3.6) + "km/h";
@@ -128,6 +128,16 @@ searchButton.addEventListener("click", () => {
         check_weather(city);
     }
 });
+
+searchBox.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+        const city = searchBox.value.trim();
+        if (city !== "") {
+            check_weather(city);
+        }
+    }
+});
+
 </script>
 
 <div class="infobox">

@@ -128,6 +128,16 @@ searchButton.addEventListener("click", () => {
         check_weather(city);
     }
 });
+
+searchBox.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+        const city = searchBox.value.trim();
+        if (city !== "") {
+            check_weather(city);
+        }
+    }
+});
+
 </script>
 
 <div class="infobox">
